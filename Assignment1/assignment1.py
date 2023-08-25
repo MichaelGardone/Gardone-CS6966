@@ -78,8 +78,8 @@ trainer = Trainer(
     compute_metrics=compute_metrics
 )
 
-# # Train the model
-# trainer.train()
+# Train the model
+trainer.train()
 
-# # Evaluate
-# trainer.evaluate()
+# Evaluate
+trainer.evaluate()
