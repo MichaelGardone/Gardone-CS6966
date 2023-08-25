@@ -11,7 +11,7 @@
 #SBATCH -o assignment_1-%j
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate assignment1
+conda activate cs6966
 
 mkdir -p /scratch/general/vast/u1000771/huggingface_cache
 export TRANSFORMER_CACHE="/scratch/general/vast/u1000771/huggingface_cache"

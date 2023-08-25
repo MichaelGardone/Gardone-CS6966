@@ -14,9 +14,9 @@ progArgs = parser.parse_args()
 # The dataset we want to use
 task = "imdb"
 # The model we want to train
-model_checkpoint = "microsoft/deberta-v3-large"
+model_checkpoint = "microsoft/deberta-v3-base"
 # The batch size -- https://huggingface.co/microsoft/deberta-v3-large showed 8?
-batch_size = 8
+batch_size = 2
 
 dataset = load_dataset("imdb")
 # print(dataset)
@@ -53,7 +53,7 @@ args = TrainingArguments(
     learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
-    num_train_epochs=5,
+    num_train_epochs=1,
     weight_decay=0.01,
     load_best_model_at_end=True,
     gradient_accumulation_steps=5,
