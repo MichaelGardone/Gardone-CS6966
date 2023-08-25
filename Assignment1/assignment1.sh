@@ -18,4 +18,4 @@ export TRANSFORMER_CACHE="/scratch/general/vast/u1000771/huggingface_cache"
 
 OUT_DIR=/scratch/general/vast/u1000771/cs6966/assignment1/models
 mkdir -p ${OUT_DIR}
-python assignments.py --output_dir ${OUT_DIR}
+python assignment1.py --output_dir ${OUT_DIR}
