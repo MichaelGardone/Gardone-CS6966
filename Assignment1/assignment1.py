@@ -1,4 +1,5 @@
 import argparse, os
+import jsonlines
 
 from datasets import load_dataset, load_metric
 
@@ -82,4 +83,19 @@ trainer = Trainer(
 trainer.train()
 
 # Evaluate
-trainer.evaluate()
+res = trainer.evaluate()
+
+with jsonlines.open("evaluation.txt", mode='w') as writer:
+    for item in res:
+        writer.write(item)
+    ##
+##
+
+# filename = 'wrong_predictions.txt'
+# output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
+
+# with jsonlines.open(filename, mode='w') as writer:
+#     for item in output_items:
+#         writer.write(item)
+    ##
+##
