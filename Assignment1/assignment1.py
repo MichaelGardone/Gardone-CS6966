@@ -85,11 +85,13 @@ trainer.train()
 # Evaluate
 res = trainer.evaluate()
 
-with jsonlines.open("evaluation.txt", mode='w') as writer:
+with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     for item in res:
         writer.write(item)
     ##
 ##
+
+predictions = model.predict(dataset)
 
 # filename = 'wrong_predictions.txt'
 # output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
