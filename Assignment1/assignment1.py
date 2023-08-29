@@ -1,5 +1,5 @@
 import argparse, os
-import jsonlines
+import jsonlines, torch
 
 from datasets import load_dataset, load_metric
 
@@ -19,10 +19,11 @@ model_checkpoint = "microsoft/deberta-v3-base"
 # The batch size -- https://huggingface.co/microsoft/deberta-v3-large showed 8?
 batch_size = 2
 
-dataset = load_dataset("imdb")
+training_set = load_dataset(task, split="train")
+test_set = load_dataset(task, split="test")
 # print(dataset)
 # print(dataset["train"][0]['text'])
-metric = load_metric("accuracy", task)
+metric = load_metric("accuracy")
 # print(metric)
 
 # Test metric was loaded correctly
@@ -37,7 +38,9 @@ def preprocess_function(examples):
 ##
 
 print("Preprocessing data...")
-encoded_dataset = dataset.map(preprocess_function, batched=True)
+encoded_training_set = training_set.map(preprocess_function, batched=True)
+encoded_testing_set = test_set.map(preprocess_function, batched=True)
+# encoded_dataset = dataset.map(preprocess_function, batched=True)
 print("Done!")
 
 # Sentiment analysis: only two labels
@@ -63,26 +66,33 @@ args = TrainingArguments(
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    if task != "stsb":
-        predictions = np.argmax(predictions, axis=1)
-    else:
-        predictions = predictions[:, 0]
+    # if task != "stsb":
+    #     predictions = np.argmax(predictions, axis=1)
+    # else:
+    #     predictions = predictions[:, 0]
+    predictions = np.argmax(predictions, axis=1)
     return metric.compute(predictions=predictions, references=labels)
 ##
 
 trainer = Trainer(
     model,
     args,
-    train_dataset=encoded_dataset["train"],
-    eval_dataset=encoded_dataset["test"],
+    train_dataset=encoded_training_set,
+    eval_dataset=encoded_testing_set,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )
 
 # Train the model
 print("Beginning training...")
-trainer.train()
+res = trainer.train()
 print("Finished training!")
+
+with jsonlines.open("training_metrics.txt", mode='w') as writer:
+    for item in res:
+        writer.write(item + ":" + str(res[item]))
+    ##
+##
 
 # Evaluate
 print("Beginning evaluation...")
@@ -95,8 +105,8 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     ##
 ##
 
-predictions = trainer.predict(dataset["test"])
-answers = np.argmax(predictions.predictions, dim=1)
+predictions = trainer.predict(encoded_testing_set)
+answers = torch.argmax(predictions.predictions, dim=1)
 labels = predictions.label_ids
 
 # filename = 'wrong_predictions.txt'
