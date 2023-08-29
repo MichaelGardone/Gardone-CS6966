@@ -101,21 +101,40 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
 
 print("Predicting answers...")
 predictions = trainer.predict(encoded_testing_set)
-print(predictions)
+# print(predictions)
 print("Finished!")
-print("Getting out the predictions...")
-answers = np.argmax(predictions.predictions, dim=1)
-print(answers)
-print("Done!")
+# print("Getting out the predictions...")
+# answers = np.argmax(predictions.predictions, axis=1)
+# print(answers)
+# print("Done!")
 
 labels = predictions.label_ids
 print(labels)
 
-# filename = 'wrong_predictions.txt'
-# output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
-
-# with jsonlines.open(filename, mode='w') as writer:
-#     for item in output_items:
-#         writer.write(item)
+incorrect = [] # list of entries
+for i in len(labels):
+    if labels[i] != test_set["label"]:
+        incorrect.append(i)
     ##
 ##
+
+# Output all incorrect indices
+with jsonlines.open("all_wrong_indices.txt", mode='w') as writer:
+    for item in incorrect:
+        writer.write(item)
+    #
+#
+
+shuffled = np.random.shuffle(np.arange(len(incorrect)))
+output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
+for i in range(len(10)):
+    output_items.append({'review':test_set['text'][incorrect[i]], 'label':test_set['text'][incorrect[i]], 'predicted':predictions[incorrect[i]]})
+##
+
+filename = 'wrong_predictions.txt'
+
+with jsonlines.open(filename, mode='w') as writer:
+    for item in output_items:
+        writer.write(item)
+    #
+#
