@@ -91,7 +91,9 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     ##
 ##
 
-predictions = model.predict(dataset)
+predictions = model.predict(dataset["test"])
+answers = np.argmax(predictions.predictions, dim=1)
+labels = predictions.label_ids
 
 # filename = 'wrong_predictions.txt'
 # output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
