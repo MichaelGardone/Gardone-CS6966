@@ -99,9 +99,17 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     ##
 ##
 
+print("Predicting answers...")
 predictions = trainer.predict(encoded_testing_set)
-answers = torch.argmax(predictions.predictions, dim=1)
+print(predictions)
+print("Finished!")
+print("Getting out the predictions...")
+answers = np.argmax(predictions.predictions, dim=1)
+print(answers)
+print("Done!")
+
 labels = predictions.label_ids
+print(labels)
 
 # filename = 'wrong_predictions.txt'
 # output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
