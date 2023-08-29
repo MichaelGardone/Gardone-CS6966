@@ -90,7 +90,7 @@ print("Finished training!")
 
 with jsonlines.open("training_metrics.txt", mode='w') as writer:
     for item in res:
-        writer.write(item + ":" + str(res[item]))
+        writer.write(str(item) + ":" + str(res[item]))
     ##
 ##
 
@@ -101,7 +101,7 @@ print("Evaluation finished!")
 
 with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     for item in res:
-        writer.write(item + ":" + str(res[item]))
+        writer.write(str(item) + ":" + str(res[item]))
     ##
 ##
 
