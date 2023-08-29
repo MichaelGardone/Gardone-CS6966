@@ -85,14 +85,8 @@ trainer = Trainer(
 
 # Train the model
 print("Beginning training...")
-res = trainer.train()
+trainer.train()
 print("Finished training!")
-
-with jsonlines.open("training_metrics.txt", mode='w') as writer:
-    for item in res:
-        writer.write(str(item) + ":" + str(res[item]))
-    ##
-##
 
 # Evaluate
 print("Beginning evaluation...")
