@@ -79,19 +79,23 @@ trainer = Trainer(
     compute_metrics=compute_metrics
 )
 
+print("Beginning training...")
 # Train the model
 trainer.train()
+print("Finished training!")
 
 # Evaluate
+print("Beginning evaluation...")
 res = trainer.evaluate()
+print("Evaluation finished!")
 
 with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
     for item in res:
-        writer.write(item)
+        writer.write(item, ":", res[item])
     ##
 ##
 
-predictions = model.predict(dataset["test"])
+predictions = trainer.predict(dataset["test"])
 answers = np.argmax(predictions.predictions, dim=1)
 labels = predictions.label_ids
 
