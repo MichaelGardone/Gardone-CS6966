@@ -128,7 +128,9 @@ with jsonlines.open("all_wrong_indices.txt", mode='w') as writer:
 #
 
 np.random.seed(42)
-shuffled = np.random.shuffle(np.arange(len(incorrect)))
+shuffled = np.arange(len(incorrect))
+np.random.shuffle(shuffled)
+
 output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
 
 for i in range(10):
