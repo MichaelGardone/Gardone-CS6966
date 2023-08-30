@@ -110,7 +110,7 @@ print(labels)
 
 incorrect = [] # list of entries
 for i in range(len(labels)):
-    if labels[i] != predictions[i]:
+    if int(labels[i]) != int(predictions[i]):
         incorrect.append(i)
     ##
 ##
