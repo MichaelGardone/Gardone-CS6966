@@ -128,7 +128,11 @@ with jsonlines.open("all_wrong_indices.txt", mode='w') as writer:
 shuffled = np.random.shuffle(np.arange(len(incorrect)))
 output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
 for i in range(10):
-    output_items.append({'review':test_set['text'][shuffled[i]], 'label':test_set['label'][shuffled[i]], 'predicted':predictions[shuffled[i]]})
+    output = {}
+    output['review'] = test_set['text'][shuffled[i]]
+    output['label'] = test_set['label'][shuffled[i]]
+    output['predicted'] = predictions[shuffled[i]]
+    output_items.append(output)
 ##
 
 filename = 'wrong_predictions.txt'
