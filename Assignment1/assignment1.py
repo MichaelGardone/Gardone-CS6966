@@ -101,7 +101,7 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
 
 print("Predicting answers...")
 predictions = trainer.predict(encoded_testing_set)
-# print(predictions)
+print(predictions)
 print("Finished!")
 # print("Getting out the predictions...")
 # answers = np.argmax(predictions.predictions, axis=1)
