@@ -112,8 +112,8 @@ labels = predictions.label_ids
 print(labels)
 
 incorrect = [] # list of entries
-for i in len(labels):
-    if labels[i] != test_set["label"]:
+for i in range(len(labels)):
+    if labels[i] != test_set["label"][i]:
         incorrect.append(i)
     ##
 ##
@@ -127,7 +127,7 @@ with jsonlines.open("all_wrong_indices.txt", mode='w') as writer:
 
 shuffled = np.random.shuffle(np.arange(len(incorrect)))
 output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
-for i in range(len(10)):
+for i in range(10):
     output_items.append({'review':test_set['text'][incorrect[i]], 'label':test_set['text'][incorrect[i]], 'predicted':predictions[incorrect[i]]})
 ##
 
