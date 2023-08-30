@@ -108,8 +108,7 @@ print("Finished!")
 # print(answers)
 # print("Done!")
 
-# labels = predictions.label_ids
-predictions = np.armax(test_predictions.predictions, axis=1)
+predictions = np.argmax(test_predictions.predictions, axis=1)
 labels = test_predictions.label_ids
 print(labels)
 
