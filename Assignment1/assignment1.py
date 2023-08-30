@@ -100,15 +100,17 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
 ##
 
 print("Predicting answers...")
-predictions = trainer.predict(encoded_testing_set)
-print(predictions)
+test_predictions = trainer.predict(encoded_testing_set)
+print(test_predictions)
 print("Finished!")
 # print("Getting out the predictions...")
 # answers = np.argmax(predictions.predictions, axis=1)
 # print(answers)
 # print("Done!")
 
-labels = predictions.label_ids
+# labels = predictions.label_ids
+predictions = np.armax(test_predictions.predictions, axis=1)
+labels = test_predictions.label_ids
 print(labels)
 
 incorrect = [] # list of entries
