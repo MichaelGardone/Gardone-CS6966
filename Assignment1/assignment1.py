@@ -114,7 +114,7 @@ print(labels)
 
 incorrect = [] # list of entries
 for i in range(len(labels)):
-    if labels[i] != test_set["label"][i]:
+    if labels[i] != predictions[i]:
         incorrect.append(i)
     ##
 ##
