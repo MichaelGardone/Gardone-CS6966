@@ -135,9 +135,9 @@ output_items = [] # list of your 10 instances in the format of a dictionary {'re
 
 for i in range(10):
     output = {}
-    output['review'] = test_set[shuffled[i]]['text']
-    output['label'] = test_set[shuffled[i]]['label']
-    output['predicted'] = predictions[shuffled[i]]
+    output['review'] = test_set[int(shuffled[i])]['text']
+    output['label'] = test_set[int(shuffled[i])]['label']
+    output['predicted'] = predictions[int(shuffled[i])]
     output_items.append(output)
 ##
 
