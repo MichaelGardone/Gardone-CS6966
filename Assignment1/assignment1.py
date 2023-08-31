@@ -101,12 +101,12 @@ with jsonlines.open("evaluation_metrics.txt", mode='w') as writer:
 
 print("Predicting answers...")
 test_predictions = trainer.predict(encoded_testing_set)
-print(test_predictions)
+# print(test_predictions)
 print("Finished!")
 
 predictions = np.argmax(test_predictions.predictions, axis=1)
 labels = test_predictions.label_ids
-print(labels)
+# print(labels)
 
 incorrect = [] # list of entries
 for i in range(len(labels)):
@@ -124,16 +124,16 @@ with jsonlines.open("all_wrong_indices.txt", mode='w') as writer:
 #
 
 np.random.seed(42)
-shuffled = np.arange(len(incorrect))
-np.random.shuffle(shuffled)
+# shuffled = np.arange(len(incorrect))
+np.random.shuffle(incorrect)
 
 output_items = [] # list of your 10 instances in the format of a dictionary {'review': <review text>, 'label': <gold label>, 'predicted': <predicted label>}
 
 for i in range(10):
     output = {}
-    output['review'] = test_set[int(shuffled[i])]['text']
-    output['label'] = int(test_set[int(shuffled[i])]['label'])
-    output['predicted'] = int(predictions[int(shuffled[i])])
+    output['review'] = test_set[int(incorrect[i])]['text']
+    output['label'] = int(test_set[int(incorrect[i])]['label'])
+    output['predicted'] = int(predictions[int(incorrect[i])])
     output_items.append(output)
 ##
 
