@@ -44,8 +44,38 @@ def newyorker_caption_contest_idefics(args):
     for val_inst in nyc_data_five_val:
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
         # Each instace has a key 'image' that contains the PIL Image. You will give that to the model as input to "show" it the image instead of an url to the image jpg file.
+        prompt = [
+            # User prompts...
+            "User:Can you explain why this image is funny?",
+            nyc_data_train_two[0]['image'],
+            # nyc_data_train_two[0]['caption_choices'],
+            "<end_of_utterance>",
+
+            # HAL responds...
+            "\nAssistant:",
+            nyc_data_train_two[0]['target']
+            "<end_of_utterance>",
+
+            # User prompts...
+            "\nUser:And can you tell my why this image is comedic?",
+            nyc_data_train_two[1]['image'],
+            # nyc_data_train_two[1]['caption_choices'],
+            "<end_of_utterance>",
+
+            # HAL responds...
+            "\nAssistant:",
+            nyc_data_train_two[1]['target']
+            "<end_of_utterance>",
+
+            # Okay, now for the actual instance...
+            "\nUser:Can you tell me why people could find this one funny?",
+            val_inst['image'],
+            "<end_of_utterance>",
+
+            "\nAssistant:"
+        ]
         
-        prompts.append(["prompt you designed"])
+        prompts.append([prompt])
         
         # I'm saving images to `out`` to be able to see them in the output folder
         val_inst['image'].save(f"out/{val_inst['instance_id']}.jpg")
@@ -146,7 +176,7 @@ def newyorker_caption_contest_llama2(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--seed', type=int, help='Random seed set to your uNID') # <======================> 
+    parser.add_argument('--seed', default='01000771', type=int, help='Random seed set to your uNID') 
     parser.add_argument('--output_dir', type=str, help='Directory where model checkpoints will be saved')
     parser.add_argument('--task_name', default="jmhessel/newyorker_caption_contest",  type=str, help='Name of the task that will be used by huggingface load dataset')    
     parser.add_argument('--subtask', default="explanation", type=str, help="The contest has three subtasks: matching, ranking, explanation")
@@ -159,4 +189,4 @@ if __name__ == '__main__':
     torch.cuda.manual_seed(args.seed)
 
     newyorker_caption_contest_idefics(args)
-    newyorker_caption_contest_llama2(args)
+    # newyorker_caption_contest_llama2(args) # TODO: Uncomment
