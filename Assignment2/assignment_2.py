@@ -44,28 +44,13 @@ def newyorker_caption_contest_idefics(args):
     for val_inst in nyc_data_five_val:
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
         # Each instace has a key 'image' that contains the PIL Image. You will give that to the model as input to "show" it the image instead of an url to the image jpg file.
-        prompt = ["User:Can you explain why this image is funny?",
-            nyc_data_train_two[0]['image'],
-            "<end_of_utterance>",
-
-            "\nAssistant:",
-            nyc_data_train_two[0]['target']
-            "<end_of_utterance>",
-
-            "\nUser:And can you tell my why this image is comedic?",
-            nyc_data_train_two[1]['image'],
-            "<end_of_utterance>",
-
-            "\nAssistant:",
-            nyc_data_train_two[1]['target']
-            "<end_of_utterance>",
-
-            "\nUser:Can you tell me why people could find this one funny?",
-            val_inst['image'],
-            "<end_of_utterance>",
-            
-            "\nAssistant:"
-        ]
+        prompt = ["User:Can you explain why this image is funny?", nyc_data_train_two[0]['image'], "<end_of_utterance>",
+                  "\nAssistant:", nyc_data_train_two[0]['target'], "<end_of_utterance>",
+                  "\nUser:And can you tell my why this image is comedic?", nyc_data_train_two[1]['image'], "<end_of_utterance>",
+                  "\nAssistant:", nyc_data_train_two[1]['target'], "<end_of_utterance>",
+                  "\nUser:Can you tell me why people could find this one funny?", val_inst['image'], "<end_of_utterance>",
+                  "\nAssistant:"
+                  ]
         
         prompts.append([prompt])
         
@@ -149,8 +134,8 @@ def newyorker_caption_contest_llama2(args):
     for i, val_inst in enumerate(nyc_data_five_val):
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
         prompt = "<s>[INST] <<SYS>>\n" +\
-        "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased.\n" +\
-        "If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.\n" + "<</SYS>>\n" +\
+            "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased.\n" +\
+            "If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.\n" + "<</SYS>>\n" +\
             "Can you explain why this image is funny?" + nyc_data_train_two[0]['input'] + "[/INST]" + nyc_data_train_two[0]['target'] + "</s><s>" +\
             "[INST]" +\
             "\nWhy is this image and caption funny?" + nyc_data_train_two[1]['input'] + "\n" +\
