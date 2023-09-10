@@ -39,6 +39,10 @@ def newyorker_caption_contest_idefics(args):
     nyc_data_five_val = random.sample(nyc_data['val'],5)
     nyc_data_train_two = random.sample(nyc_data['train'],2)
 
+    print(nyc_data_train_two[0])
+    print(nyc_data_train_two[0]['target'])
+    print(nyc_data_train_two[0]['image'])
+
     prompts = []
 
     for val_inst in nyc_data_five_val:
