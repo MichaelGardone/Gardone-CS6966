@@ -44,11 +44,11 @@ def newyorker_caption_contest_idefics(args):
     for val_inst in nyc_data_five_val:
         # ======================> ADD YOUR CODE TO DEFINE A PROMPT WITH TWO TRAIN EXAMPLES/DEMONSTRATIONS/SHOTS <======================
         # Each instace has a key 'image' that contains the PIL Image. You will give that to the model as input to "show" it the image instead of an url to the image jpg file.
-        prompt = ["User:Can you explain why this image is funny?", np.array(nyc_data_train_two[0]['image']), "<end_of_utterance>",
-                  "\nAssistant:", nyc_data_train_two[0]['target'], "<end_of_utterance>",
-                  "\nUser:And can you tell my why this image is comedic?", np.array(nyc_data_train_two[1]['image']), "<end_of_utterance>",
-                  "\nAssistant:", nyc_data_train_two[1]['target'], "<end_of_utterance>",
-                  "\nUser:Can you tell me why people could find this one funny?", np.array(val_inst['image']), "<end_of_utterance>",
+        prompt = ["User: Can you explain why this image is funny?", nyc_data_train_two[0]['image'], "<end_of_utterance>",
+                  "\nAssistant: " + nyc_data_train_two[0]['target'] + "<end_of_utterance>",
+                  "\nUser: And can you tell my why this image is comedic?", nyc_data_train_two[1]['image'], "<end_of_utterance>",
+                  "\nAssistant: " + nyc_data_train_two[1]['target'] + "<end_of_utterance>",
+                  "\nUser: Can you tell me why people could find this one funny?", val_inst['image'], "<end_of_utterance>",
                   "\nAssistant:"
                   ]
         
