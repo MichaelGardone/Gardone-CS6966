@@ -52,7 +52,7 @@ def newyorker_caption_contest_idefics(args):
                   "\nAssistant:"
                   ]
         
-        prompts.append([prompt])
+        prompts.append(prompt)
         
         # I'm saving images to `out`` to be able to see them in the output folder
         val_inst['image'].save(f"out/{val_inst['instance_id']}.jpg")
