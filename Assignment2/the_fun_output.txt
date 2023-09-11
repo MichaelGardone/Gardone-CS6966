@@ -1,0 +1,20 @@
+Loading model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:20<00:20, 20.05s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:33<00:00, 16.44s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:33<00:00, 16.98s/it]
+Loading data
+{'input': "scene: an office room description: Two people are sitting across a desk from one another. They are both tied up in straight jackets. uncanny: People don't normally wear straight jackets in offices. entities: Straitjacket, Interview. caption: I have some good news—we're letting you go.", 'target': 'A play on the words "letting you go" -- normally, if your boss was to "let you go" it would be bad news, because they would be firing you. In this context, "letting you go" means removing you from your straight jacket, which would be good news. Because the boss also has a straitjackets, the employee might be getting fired from this company where everyone wears straitjackets, but that would still be good news because this is a terrible workplace.', 'instance_id': 'dbf946a30399fc5407a08c81d759a24d', 'image': <PIL.JpegImagePlugin.JpegImageFile image mode=L size=500x384 at 0x1501F0C87D30>, 'caption_choices': "I have some good news—we're letting you go."}
+A play on the words "letting you go" -- normally, if your boss was to "let you go" it would be bad news, because they would be firing you. In this context, "letting you go" means removing you from your straight jacket, which would be good news. Because the boss also has a straitjackets, the employee might be getting fired from this company where everyone wears straitjackets, but that would still be good news because this is a terrible workplace.
+<PIL.JpegImagePlugin.JpegImageFile image mode=L size=500x384 at 0x1501F0C87D30>
+Traceback (most recent call last):
+  File "assignment_2.py", line 180, in <module>
+    newyorker_caption_contest_idefics(args)
+  File "assignment_2.py", line 65, in newyorker_caption_contest_idefics
+    inputs = processor(prompts, add_end_of_utterance_token=False, return_tensors="pt").to(device)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/models/idefics/processing_idefics.py", line 322, in __call__
+    image_objects = self.image_processor(image_objects, transform=transform)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/image_processing_utils.py", line 546, in __call__
+    return self.preprocess(images, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/models/idefics/image_processing_idefics.py", line 133, in preprocess
+    images = make_list_of_images(images)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/image_utils.py", line 145, in make_list_of_images
+    raise ValueError(
+ValueError: Invalid image type. Expected either PIL.Image.Image, numpy.ndarray, torch.Tensor, tf.Tensor or jax.ndarray, but got <class 'list'>.
