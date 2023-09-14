@@ -1,0 +1,87 @@
+Loading model
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:20<00:20, 20.50s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:34<00:00, 16.83s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:34<00:00, 17.38s/it]
+Loading data
+0:
+User: Can you explain why this image is funny? 
+Assistant: A normal vehicle that breaks down might have the "check engine" light on, which a mechanic might ask about the timeline of. Here, the car is the Wienermobile, which might instead have a "check mustard" light instead. It's funny partly because it's unclear what the check mustard light would indicate about the hot dog repair. 
+User: And can you tell my why this image is comedic? 
+Assistant: Odd/scary behaviors are said to occur during a full moon; in this case, the "full earth" out the window either implies that these people live in a space house, or that the house occasionally jumps into orbit. The contrast between the man's nonchalance and the woman's lucidity about the absurdity of being in space is humorous. 
+User: Can you tell me why people could find this one funny? 
+Assistant: This drawing of fish swimming in a school is amusing because it is a simple and common scene that most people can relate to. The fact that it is a simple drawing of fish on a piece of paper, yet it evokes a sense of humor, might be due to the unexpected juxtaposition of the mundane and the whimsical. The fact that it is a drawing of fish on a piece of paper might also be seen as a playful nod to the idea of artistic expression and the creative process.
+
+1:
+User: Can you explain why this image is funny? 
+Assistant: A normal vehicle that breaks down might have the "check engine" light on, which a mechanic might ask about the timeline of. Here, the car is the Wienermobile, which might instead have a "check mustard" light instead. It's funny partly because it's unclear what the check mustard light would indicate about the hot dog repair. 
+User: And can you tell my why this image is comedic? 
+Assistant: Odd/scary behaviors are said to occur during a full moon; in this case, the "full earth" out the window either implies that these people live in a space house, or that the house occasionally jumps into orbit. The contrast between the man's nonchalance and the woman's lucidity about the absurdity of being in space is humorous. 
+User: Can you tell me why people could find this one funny? 
+Assistant: The image is a playful and imaginative representation of the biblical story of Noah's Ark. The people on the ark are depicted as having fun, with one man even surfing on the waves. This contrasts with the seriousness of the original story, which involves a great flood and the survival of Noah's family and animals. The humor comes from the idea of turning a dramatic event into a lighthearted and amusing scene.
+
+2:
+User: Can you explain why this image is funny? 
+Assistant: A normal vehicle that breaks down might have the "check engine" light on, which a mechanic might ask about the timeline of. Here, the car is the Wienermobile, which might instead have a "check mustard" light instead. It's funny partly because it's unclear what the check mustard light would indicate about the hot dog repair. 
+User: And can you tell my why this image is comedic? 
+Assistant: Odd/scary behaviors are said to occur during a full moon; in this case, the "full earth" out the window either implies that these people live in a space house, or that the house occasionally jumps into orbit. The contrast between the man's nonchalance and the woman's lucidity about the absurdity of being in space is humorous. 
+User: Can you tell me why people could find this one funny? 
+Assistant: The image is a cartoon of people walking down a street, and it's funny because it's a simple and relatable situation. The fact that they are carrying coffee cups and backpacks adds to the everyday nature of the scene. The humor comes from the fact that the people are unaware of the man with a long neck following them, which is an unexpected and absurd element in the otherwise ordinary setting.
+
+3:
+User: Can you explain why this image is funny? 
+Assistant: A normal vehicle that breaks down might have the "check engine" light on, which a mechanic might ask about the timeline of. Here, the car is the Wienermobile, which might instead have a "check mustard" light instead. It's funny partly because it's unclear what the check mustard light would indicate about the hot dog repair. 
+User: And can you tell my why this image is comedic? 
+Assistant: Odd/scary behaviors are said to occur during a full moon; in this case, the "full earth" out the window either implies that these people live in a space house, or that the house occasionally jumps into orbit. The contrast between the man's nonchalance and the woman's lucidity about the absurdity of being in space is humorous. 
+User: Can you tell me why people could find this one funny? 
+Assistant: This image is funny because it features two men on bicycles, with a depiction of a man in a car saying, "I knew I shouldn't have given you the keys." The scene is humorous because it plays on the common stereotype of men who are not good drivers and can cause accidents or mishaps while operating a vehicle. The contrast between the two men's modes of transportation (bicycles vs. car) adds to the amusement.
+
+4:
+User: Can you explain why this image is funny? 
+Assistant: A normal vehicle that breaks down might have the "check engine" light on, which a mechanic might ask about the timeline of. Here, the car is the Wienermobile, which might instead have a "check mustard" light instead. It's funny partly because it's unclear what the check mustard light would indicate about the hot dog repair. 
+User: And can you tell my why this image is comedic? 
+Assistant: Odd/scary behaviors are said to occur during a full moon; in this case, the "full earth" out the window either implies that these people live in a space house, or that the house occasionally jumps into orbit. The contrast between the man's nonchalance and the woman's lucidity about the absurdity of being in space is humorous. 
+User: Can you tell me why people could find this one funny? 
+Assistant: This image is a comical take on a funeral scene, with a man in a suit and glasses standing over a coffin with a woman inside. The man is holding a tube, which is connected to the woman, and there is a joke bag nearby. The scene is amusing because it's unexpected to see a man attending a funeral in such a manner, and the presence of the tube and the joke bag add a humorous twist to the situation.
+
+Loading data
+Loading model
+Traceback (most recent call last):
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/utils/_errors.py", line 261, in hf_raise_for_status
+    response.raise_for_status()
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/resolve/main/tokenizer_config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/utils/hub.py", line 429, in cached_file
+    resolved_file = hf_hub_download(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/utils/_validators.py", line 118, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 1195, in hf_hub_download
+    metadata = get_hf_file_metadata(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/utils/_validators.py", line 118, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/file_download.py", line 1541, in get_hf_file_metadata
+    hf_raise_for_status(r)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/huggingface_hub/utils/_errors.py", line 277, in hf_raise_for_status
+    raise GatedRepoError(message, response) from e
+huggingface_hub.utils._errors.GatedRepoError: 403 Client Error. (Request ID: Root=1-64ffc4fd-7463239d179c04ec6bc57e9e;2e899189-6ee8-4b69-b9d3-ff77997a567e)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/resolve/main/tokenizer_config.json.
+Your request to access model meta-llama/Llama-2-7b-chat-hf is awaiting a review from the repo authors.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "assignment_2.py", line 177, in <module>
+    newyorker_caption_contest_llama2(args)
+  File "assignment_2.py", line 126, in newyorker_caption_contest_llama2
+    tokenizer = AutoTokenizer.from_pretrained(args.llama2_checkpoint)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py", line 686, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/models/auto/tokenization_auto.py", line 519, in get_tokenizer_config
+    resolved_config_file = cached_file(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/utils/hub.py", line 444, in cached_file
+    raise EnvironmentError(
+OSError: You are trying to access a gated repo.
+Make sure to request access at https://huggingface.co/meta-llama/Llama-2-7b-chat-hf and pass a token having permission to this repo either by logging in with `huggingface-cli login` or by passing `token=<your_token>`.
