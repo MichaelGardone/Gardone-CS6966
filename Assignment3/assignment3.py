@@ -109,4 +109,3 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', default='out', type=str, help='Directory where model checkpoints will be saved')    
     args = parser.parse_args()
     main(args)
-

@@ -8,7 +8,7 @@
 #SBATCH --mem=80GB
 #SBATCH --mail-user=u1000771@umail.utah.edu
 #SBATCH --mail-type=FAIL,END
-#SBATCH -o assignment_2-%j
+#SBATCH -o assignment_3-%j
 
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate cs6966
