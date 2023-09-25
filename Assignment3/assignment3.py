@@ -45,8 +45,9 @@ class ExplainableTransformerPipeline():
         attr_sum = attributes.sum(-1) 
         
         attr = attr_sum / torch.norm(attr_sum)
-        
-        a = pd.Series(attr.numpy()[0][::-1], 
+        cattr = attr.cpu()
+
+        a = pd.Series(cattr.numpy()[0][::-1], 
                          index = self.__pipeline.tokenizer.convert_ids_to_tokens(inputs.detach().numpy()[0])[::-1])
         
         a.plot.barh(figsize=(10,20))
