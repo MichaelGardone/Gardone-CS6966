@@ -97,6 +97,8 @@ def main(args):
     idx=0
     with jsonlines.open(args.a1_analysis_file, 'r') as reader:
         for obj in reader:
+            print(idx)
+            print(obj["review"])
             exp_model.explain(obj["review"], os.path.join(args.output_dir,f'example_{idx}'))
             idx+=1
 
