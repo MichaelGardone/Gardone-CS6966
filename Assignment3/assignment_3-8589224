@@ -1,0 +1,16 @@
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/convert_slow_tokenizer.py:473: UserWarning: The sentencepiece tokenizer that you are converting to a fast tokenizer uses the byte fallback option which is not implemented in the fast tokenizers. In practice this means that the fast version of the tokenizer can produce unknown tokens whereas the sentencepiece version would have converted these unknown tokens into a sequence of byte tokens matching the original piece of text.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Some weights of DebertaV2ForSequenceClassification were not initialized from the model checkpoint at microsoft/deberta-v3-base and are newly initialized: ['classifier.weight', 'classifier.bias', 'pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Traceback (most recent call last):
+  File "assignment3.py", line 113, in <module>
+    main(args)
+  File "assignment3.py", line 102, in main
+    exp_model.explain(obj["review"], os.path.join(args.output_dir,f'example_{idx}'))
+  File "assignment3.py", line 73, in explain
+    self.visualize(inputs, attributes, outfile_path)
+  File "assignment3.py", line 52, in visualize
+    index = self.__pipeline.tokenizer.convert_ids_to_tokens(inputs.detach().numpy()[0])[::-1])
+TypeError: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
