@@ -15,6 +15,7 @@ from transformers import AutoModelForSequenceClassification
 from captum.attr import LayerIntegratedGradients, TokenReferenceBase
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 import argparse 
 import jsonlines
@@ -51,8 +52,14 @@ class ExplainableTransformerPipeline():
         a = pd.Series(cattr.numpy()[0][::-1], 
                          index = self.__pipeline.tokenizer.convert_ids_to_tokens(cinputs.detach().numpy()[0])[::-1])
         
-        a.plot.barh(figsize=(10,20))
-        plt.savefig(outfile_path)
+        # Split from here: https://stackoverflow.com/a/33368088
+        n = 20
+        i = 0
+        for g, df in a.groupby(np.arange(len(a)) // n):
+            df.plot.barh(figsize=(10,20))
+            plt.savefig(outfile_path + "_P" + str(i))
+            i += 1
+        ##
                       
     def explain(self, text: str, outfile_path: str):
         """
