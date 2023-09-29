@@ -59,13 +59,13 @@ class ExplainableTransformerPipeline():
         plt.savefig(outfile_path)
 
         # Split from here: https://stackoverflow.com/a/33368088
-        # n = 30
-        # i = 0
-        # frames = a.groupby(np.arange(len(a)) // n)
-        # for g, df in frames:
-        #     df.plot.barh(figsize=(10,20))
-        #     plt.savefig(outfile_path + "_P" + str(i))
-        #     i += 1
+        n = 30
+        i = 0
+        frames = a.groupby(np.arange(len(a)) // n)
+        for g, df in frames:
+            df.plot.barh(figsize=(10,20))
+            plt.savefig(outfile_path + "_P" + str(i))
+            i += 1
         ##
                       
     def explain(self, text: str, outfile_path: str):
