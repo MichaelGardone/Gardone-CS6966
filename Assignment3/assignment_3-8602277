@@ -1,0 +1,32 @@
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/transformers/convert_slow_tokenizer.py:473: UserWarning: The sentencepiece tokenizer that you are converting to a fast tokenizer uses the byte fallback option which is not implemented in the fast tokenizers. In practice this means that the fast version of the tokenizer can produce unknown tokens whereas the sentencepiece version would have converted these unknown tokens into a sequence of byte tokens matching the original piece of text.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Some weights of DebertaV2ForSequenceClassification were not initialized from the model checkpoint at microsoft/deberta-v3-base and are newly initialized: ['classifier.bias', 'pooler.dense.bias', 'pooler.dense.weight', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Traceback (most recent call last):
+  File "assignment3.py", line 127, in <module>
+    main(args)
+  File "assignment3.py", line 116, in main
+    exp_model.explain(obj["review"], os.path.join(args.output_dir,f'example_{idx}'))
+  File "assignment3.py", line 87, in explain
+    self.visualize(inputs, attributes, outfile_path)
+  File "assignment3.py", line 56, in visualize
+    plt.savefig("smooshed/" + outfile_path)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/pyplot.py", line 1023, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/figure.py", line 3378, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/backend_bases.py", line 2366, in print_figure
+    result = print_method(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/backend_bases.py", line 2232, in <lambda>
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 509, in print_png
+    self._print_pil(filename_or_obj, "png", pil_kwargs, metadata)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py", line 458, in _print_pil
+    mpl.image.imsave(
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/matplotlib/image.py", line 1689, in imsave
+    image.save(fname, **pil_kwargs)
+  File "/uufs/chpc.utah.edu/common/home/u1000771/miniconda3/envs/cs6966/lib/python3.8/site-packages/PIL/Image.py", line 2410, in save
+    fp = builtins.open(filename, "w+b")
+FileNotFoundError: [Errno 2] No such file or directory: 'smooshed/out/example_0.png'
