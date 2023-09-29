@@ -53,7 +53,7 @@ class ExplainableTransformerPipeline():
                          index = self.__pipeline.tokenizer.convert_ids_to_tokens(cinputs.detach().numpy()[0])[::-1])
         
         a.plot.barh(figsize=(10,40))
-        plt.savefig(outfile_path)
+        plt.savefig("smooshed/" + outfile_path)
 
         # Split from here: https://stackoverflow.com/a/33368088
         # n = 30
