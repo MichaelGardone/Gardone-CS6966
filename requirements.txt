@@ -9,3 +9,5 @@ accelerate
 jsonlines
 pillow
 captum
+torchtext
+spacy
