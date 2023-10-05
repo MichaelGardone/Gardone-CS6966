@@ -32,8 +32,9 @@ class AttentionVisualizerExplainer():
     def forward_func2(self, inputs:tensor, token_type_ids=None, position_ids=None):
         # Local variable to store the attention mask to be used in explain -- ih-explainer (from class) just tosses this data out
         self.__attention_mask = torch.ones_like(inputs)
-        pred = self.__pipeline.model(inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=self.__attention_mask)
-        return pred.start_logits, pred.end_logits, pred.attentions
+        output = self.__pipeline.model(inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=self.__attention_mask)
+        print(output)
+        return 0, 0, output.attentions
     ##
     
     def _visualize_t2t_scores(self, scores_mat, all_tokens, x_label_name='Head', output_dir="out"):
@@ -62,19 +63,20 @@ class AttentionVisualizerExplainer():
                       
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
-        # inputs, input_len = self.generate_inputs2(text)
-        # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
-        # token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
-        # position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
+        inputs, input_len = self.generate_inputs2(text)
+        baseline = self.generate_baseline(sequence_len = inputs.shape[1])
+        token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
+        position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
 
-        # indices = inputs[0].detach().tolist()
-        # all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
+        indices = inputs[0].detach().tolist()
+        all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
 
-        # ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
+        ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
+        return
         # print('Predicted Answer: ', ' '.join(all_tokens[torch.argmax(ss) : torch.argmax(es)+1]))
         # print("#=#=#=#=#=#=#=#=#=#=#=#")
         # print(att)
-
+        
         # I am forgor::: the above is primarily from the QA model, sentiment analysis doesn't provide the start/end logits
 
         prediction = self.__pipeline.predict(text)
