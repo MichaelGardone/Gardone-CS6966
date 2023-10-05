@@ -88,4 +88,16 @@ class TCAVPipeline(explainer.BaseExplainer):
         concept_iter = dataset_to_dataloader(dataset, batch_size=1)
         return Concept(id=id, name=name, data_iter=concept_iter)
     ##
+
+    # Print concepts
+    def print_concept(self, concept_iter):
+        cnt = 0
+        max_print = 10
+        item = next(concept_iter)
+        while cnt < max_print and item is not None:
+            print(' '.join([self.__pipeline.tokenizer.decode(item_elem) for item_elem in item[0]]))
+            item = next(concept_iter)
+            cnt += 1
+        ##
+    ##
 ##

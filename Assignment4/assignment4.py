@@ -8,6 +8,7 @@ from transformers import AutoModelForSequenceClassification
 
 import numpy as np
 
+import random
 import argparse 
 import jsonlines
 import os
@@ -17,20 +18,6 @@ PRETRAINED_MODEL = 'microsoft/deberta-v3-base'
 # TEXT = torchtext.data.Field(lower=True, tokenize='spacy')
 # LABEL = torchtext.data.LabelField(dtype = torch.float)
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-# ========= CONCEPT MAKER =========== #
-# Print concepts
-def print_concept(concept_iter):
-    cnt = 0
-    max_print = 10
-    item = next(concept_iter)
-    while cnt < max_print and item is not None:
-        print(' '.join([TEXT.vocab.itos[item_elem] for item_elem in item[0]]))
-        item = next(concept_iter)
-        cnt += 1
-    ##
-##
-# ========= CONCEPT MAKER =========== #
 
 def main(args):
     # Fixing the seeds
