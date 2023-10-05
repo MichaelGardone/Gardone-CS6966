@@ -45,7 +45,15 @@ class AttentionVisualizerExplainer():
         inputs = self.generate_inputs(text)
         baseline = self.generate_baseline(sequence_len = inputs.shape[1])
 
-        lig = LayerIntegratedGradients(self.forward_func2, getattr(self.__pipeline.model, 'deberta').embeddings)
+        ss, es, att = self.forward_func2(inputs)
+        print(ss)
+        print("#=#=#=#=#=#=#=#=#=#=#=#")
+        print(es)
+        print("#=#=#=#=#=#=#=#=#=#=#=#")
+        print(att)
+
+        # This works!
+        # lig = LayerIntegratedGradients(self.forward_func2, getattr(self.__pipeline.model, 'deberta').embeddings)
     ##
     
     def generate_inputs(self, text: str) -> tensor:
