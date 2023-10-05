@@ -67,7 +67,7 @@ class AttentionVisualizerExplainer():
         plt.savefig(output_dir + f"token2token_layer{layer}")
     ##
 
-    def _visualize_token2head_scores(self, scores_mat, all_tokens, output_dir="out"):
+    def _visualize_t2h_scores(self, scores_mat, all_tokens, layer, output_dir="out"):
         fig = plt.figure(figsize=(30, 50))
 
         for idx, scores in enumerate(scores_mat):
@@ -89,7 +89,7 @@ class AttentionVisualizerExplainer():
         ##
 
         plt.tight_layout()
-        plt.savefig(output_dir + "token2head")
+        plt.savefig(output_dir + "token2head_L{layer}")
     ##
     
     def explain(self, text: str, outfile_path: str):
@@ -112,8 +112,11 @@ class AttentionVisualizerExplainer():
         all_attens = torch.stack(attens)
 
         # DeBERTa has 12 layers: [0, 11]
-        layer = 2
-        self._visualize_t2t_scores(all_attens[layer].squeeze().detach().cpu().numpy(), all_tokens, layer, output_dir=outfile_path)
+        for i in range(11):
+            self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=outfile_path)
+        ##
+
+        self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().deatch().cpu.numpy(), x_label="Layer")
         return
         
         prediction = self.__pipeline.predict(text)
@@ -134,6 +137,12 @@ class AttentionVisualizerExplainer():
 
         # print(attributes)
         self._visualize_t2t_scores(attributes[0].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
+    ##
+
+    def summarize_attributions(self, attributions):
+        attributions = attributions.sum(dim=-1).squeeze(0)
+        attributions = attributions / self.__norm_fn(attributions)
+        return attributions
     ##
     
     def generate_inputs2(self, text: str):
