@@ -23,7 +23,7 @@ class TCAVPipeline(explainer.BaseExplainer):
     """Wrapper for Captum framework usage with Huggingface Pipeline"""
     
     def __init__(self, name:str, pipeline: TextClassificationPipeline, device: str):
-        super.__init__(name, pipeline, device)
+        super().__init__(name, pipeline, device)
         self.__tcav = TCAV(pipeline, layers=['convs.2', 'convs.1'])
     ##
     

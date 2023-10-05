@@ -22,7 +22,7 @@ class InputHighlightingPipeline(explainer.BaseExplainer):
     """Wrapper for Captum framework usage with Huggingface Pipeline"""
     
     def __init__(self, name:str, pipeline: TextClassificationPipeline, device: str):
-        super.__init__(name, pipeline, device)
+        super().__init__(name, pipeline, device)
     
     def forward_func(self, inputs: tensor, position = 0):
         """
