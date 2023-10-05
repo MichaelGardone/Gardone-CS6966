@@ -39,7 +39,7 @@ def main(args):
     print(exp_model.decode(tf))
     
     positive = exp_model.assemble_concept("positive", 0, "data/positive")
-    # print_concept(iter(positive.data_iter))
+    exp_model.print_concept(iter(positive.data_iter))
 
     return
 
