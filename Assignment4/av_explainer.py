@@ -36,7 +36,7 @@ class AttentionVisualizerExplainer():
         return pred.start_logits, pred.end_logits, pred.attentions
     ##
     
-    def _visualize_t2t_scores(scores_mat, all_tokens, x_label_name='Head', output_dir="out"):
+    def _visualize_t2t_scores(self, scores_mat, all_tokens, x_label_name='Head', output_dir="out"):
         fig = plt.figure(figsize=(20, 20))
         for idx, scores in enumerate(scores_mat):
             scores_np = np.array(scores)
@@ -94,7 +94,7 @@ class AttentionVisualizerExplainer():
         all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
 
         # print(attributes)
-        self._visualize_t2t_scores(attributes, all_tokens, output_dir=outfile_path)
+        self._visualize_t2t_scores(attributes[2].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
     ##
     
     def generate_inputs2(self, text: str):
