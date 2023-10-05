@@ -15,6 +15,12 @@ class AttentionVisualizerExplainer():
         self.__name = name
         self.__pipeline = pipeline
         self.__device = device
+
+        if torch.__version__ >= '1.7.0':
+            self.__norm_fn = torch.linalg.norm
+        else:
+            self.__norm_fn = torch.norm
+        ##
     ##
 
     def forward_func(self, inputs: tensor, position = 0):
@@ -33,11 +39,11 @@ class AttentionVisualizerExplainer():
         # Local variable to store the attention mask to be used in explain -- ih-explainer (from class) just tosses this data out
         self.__attention_mask = torch.ones_like(inputs)
         output = self.__pipeline.model(inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=self.__attention_mask)
-        print(output)
-        return 0, 0, output.attentions
+        # print(output)
+        return output.logits, output.attentions
     ##
     
-    def _visualize_t2t_scores(self, scores_mat, all_tokens, x_label_name='Head', output_dir="out"):
+    def _visualize_t2t_scores(self, scores_mat, all_tokens, layer, x_label_name='Head', output_dir="out"):
         fig = plt.figure(figsize=(20, 20))
         for idx, scores in enumerate(scores_mat):
             scores_np = np.array(scores)
@@ -58,9 +64,34 @@ class AttentionVisualizerExplainer():
         ##
         plt.tight_layout()
 
-        plt.savefig(output_dir + "token2token")
+        plt.savefig(output_dir + f"token2token_layer{layer}")
     ##
-                      
+
+    def _visualize_token2head_scores(self, scores_mat, all_tokens, output_dir="out"):
+        fig = plt.figure(figsize=(30, 50))
+
+        for idx, scores in enumerate(scores_mat):
+            scores_np = np.array(scores)
+            ax = fig.add_subplot(6, 2, idx+1)
+            # append the attention weights
+            im = ax.matshow(scores_np, cmap='viridis')
+
+            fontdict = {'fontsize': 20}
+
+            ax.set_xticks(range(len(all_tokens)))
+            ax.set_yticks(range(len(scores)))
+
+            ax.set_xticklabels(all_tokens, fontdict=fontdict, rotation=90)
+            ax.set_yticklabels(range(len(scores[0])), fontdict=fontdict)
+            ax.set_xlabel('Layer {}'.format(idx+1))
+
+            fig.colorbar(im, fraction=0.046, pad=0.04)
+        ##
+        
+        plt.tight_layout()
+        plt.savefig(output_dir + "token2head")
+    ##
+    
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
         inputs, input_len = self.generate_inputs2(text)
@@ -71,14 +102,19 @@ class AttentionVisualizerExplainer():
         indices = inputs[0].detach().tolist()
         all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
 
-        ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
-        return
-        # print('Predicted Answer: ', ' '.join(all_tokens[torch.argmax(ss) : torch.argmax(es)+1]))
-        # print("#=#=#=#=#=#=#=#=#=#=#=#")
-        # print(att)
-        
-        # I am forgor::: the above is primarily from the QA model, sentiment analysis doesn't provide the start/end logits
+        # Take softmax of logits to get the prediction (0 or 1) -- but I don't care about that, I care about the attentions!
+        logits, attens = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
 
+        indices = inputs[0].detach().tolist()
+        all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
+
+        # flatten the tensors into a more easy-to-read form
+        all_attens = torch.stack(attens)
+
+        layer = 2
+        self._visualize_t2t_scores(all_attens[layer].squeeze().detach().cpu().numpy(), all_tokens, layer, output_dir=outfile_path)
+        return
+        
         prediction = self.__pipeline.predict(text)
         inputs = self.generate_inputs(text)
         baseline = self.generate_baseline(sequence_len = inputs.shape[1])
