@@ -36,7 +36,13 @@ def main(args):
     idx=0
     with jsonlines.open(args.a1_analysis_file, 'r') as reader:
         for obj in reader:
-            exp_model.explain(obj["review"], os.path.join(args.output_dir, f'/example_{idx}/'))
+            path = os.path.join(args.output_dir, f'/example_{idx}/')
+            
+            if os.path.exists(path) == False:
+                os.makedirs(path)
+            ##
+
+            exp_model.explain(obj["review"], path)
             idx+=1
             break # for now
         ##

@@ -87,7 +87,7 @@ class AttentionVisualizerExplainer():
 
             fig.colorbar(im, fraction=0.046, pad=0.04)
         ##
-        
+
         plt.tight_layout()
         plt.savefig(output_dir + "token2head")
     ##
@@ -111,6 +111,7 @@ class AttentionVisualizerExplainer():
         # flatten the tensors into a more easy-to-read form
         all_attens = torch.stack(attens)
 
+        # DeBERTa has 12 layers: [0, 11]
         layer = 2
         self._visualize_t2t_scores(all_attens[layer].squeeze().detach().cpu().numpy(), all_tokens, layer, output_dir=outfile_path)
         return
