@@ -65,9 +65,9 @@ class TCAVPipeline(explainer.BaseExplainer):
         
         for i in range(len(inpt)):
             if i + 1 < len(inpt):
-                rebuilt += self.__pipeline.tokenizer.decode(inpt).unsqueeze(0) + " "
+                rebuilt += self.__pipeline.tokenizer.decode(inpt[i]).unsqueeze(0) + " "
             else:
-                rebuilt += self.__pipeline.tokenizer.decode(inpt).unsqueeze(0)
+                rebuilt += self.__pipeline.tokenizer.decode(inpt[i]).unsqueeze(0)
             ##
         ##
 
