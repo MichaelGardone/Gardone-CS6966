@@ -85,8 +85,8 @@ class AttentionVisualizerExplainer():
         attributes, delta = lig.attribute(inputs=inputs,
                                   baselines=baseline,
                                   target = self.__pipeline.model.config.label2id[prediction[0]['label']], 
-                                  return_convergence_delta = True,
-                                  attribute_to_layer_input = True)
+                                  return_convergence_delta = True)
+                                #   attribute_to_layer_input = True)
         # We care about inputs in this case, so we want to look at all input attributions rather than output
         
         
