@@ -24,6 +24,10 @@ class TCAVPipeline(explainer.BaseExplainer):
     
     def __init__(self, name:str, pipeline: TextClassificationPipeline, device: str):
         super().__init__(name, pipeline, device)
+        self.__name = name
+        self.__pipeline = pipeline
+        self.__device = device
+        
         self.__tcav = TCAV(pipeline, layers=['convs.2', 'convs.1'])
     ##
     
