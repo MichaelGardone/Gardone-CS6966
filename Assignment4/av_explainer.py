@@ -3,7 +3,9 @@ from torch import tensor
 
 from transformers.pipelines import TextClassificationPipeline
 
-from captum.attr import LayerIntegratedGradients
+from captum.attr import visualization as viz
+from captum.attr import IntegratedGradients, LayerConductance, LayerIntegratedGradients, LayerActivation
+from captum.attr import configure_interpretable_embedding_layer, remove_interpretable_embedding_layer
 
 import pandas as pd
 import numpy as np
@@ -67,7 +69,7 @@ class AttentionVisualizerExplainer():
         plt.savefig(output_dir + f"token2token_layer{layer}")
     ##
 
-    def _visualize_t2h_scores(self, scores_mat, all_tokens, layer, output_dir="out"):
+    def _visualize_t2h_scores(self, scores_mat, all_tokens, output_dir="out"):
         fig = plt.figure(figsize=(30, 50))
 
         for idx, scores in enumerate(scores_mat):
@@ -89,7 +91,7 @@ class AttentionVisualizerExplainer():
         ##
 
         plt.tight_layout()
-        plt.savefig(output_dir + "token2head_L{layer}")
+        plt.savefig(output_dir + "token2head")
     ##
     
     def explain(self, text: str, outfile_path: str):
@@ -117,26 +119,27 @@ class AttentionVisualizerExplainer():
         ##
 
         self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().deatch().cpu.numpy(), x_label="Layer")
-        return
-        
-        prediction = self.__pipeline.predict(text)
-        inputs = self.generate_inputs(text)
-        baseline = self.generate_baseline(sequence_len = inputs.shape[1])
-        
-        lig = LayerIntegratedGradients(self.forward_func, getattr(self.__pipeline.model, 'deberta').embeddings)
-        attributes, delta = lig.attribute(inputs=inputs,
-                                  baselines=baseline,
-                                  target = self.__pipeline.model.config.label2id[prediction[0]['label']], 
-                                  return_convergence_delta = True)
-                                #   attribute_to_layer_input = True)
-        # We care about inputs in this case, so we want to look at all input attributions rather than output
-        
-        
-        indices = inputs[0].detach().tolist()
-        all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
 
-        # print(attributes)
-        self._visualize_t2t_scores(attributes[0].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
+        # interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, 'deberta.embeddings.word_embeddings')
+        
+        # prediction = self.__pipeline.predict(text)
+        # inputs = self.generate_inputs(text)
+        # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
+        
+        # lig = LayerIntegratedGradients(self.forward_func, getattr(self.__pipeline.model, 'deberta').embeddings)
+        # attributes, delta = lig.attribute(inputs=inputs,
+        #                           baselines=baseline,
+        #                           target = self.__pipeline.model.config.label2id[prediction[0]['label']], 
+        #                           return_convergence_delta = True)
+        #                         #   attribute_to_layer_input = True)
+        # # We care about inputs in this case, so we want to look at all input attributions rather than output
+        
+        
+        # indices = inputs[0].detach().tolist()
+        # all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
+
+        # # print(attributes)
+        # self._visualize_t2t_scores(attributes[0].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
     ##
 
     def summarize_attributions(self, attributions):
