@@ -1,13 +1,10 @@
 from tcav_explainer import TCAVPipeline
 
 import torch
-import torchtext
 
 import transformers
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
-
-from torchtext.vocab import Vocab
 
 import numpy as np
 
@@ -19,7 +16,7 @@ PRETRAINED_MODEL = 'microsoft/deberta-v3-base'
 
 # TEXT = torchtext.data.Field(lower=True, tokenize='spacy')
 # LABEL = torchtext.data.LabelField(dtype = torch.float)
-DEVICE = torch.DEVICE('cuda' if torch.cuda.is_available() else 'cpu')
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # ========= CONCEPT MAKER =========== #
 # Print concepts
@@ -55,8 +52,7 @@ def main(args):
     print(exp_model.decode(tf))
     
     positive = exp_model.assemble_concept("positive", 0, "data/positive")
-    print_concept(iter(positive.data_iter))
-
+    # print_concept(iter(positive.data_iter))
 
     return
 
