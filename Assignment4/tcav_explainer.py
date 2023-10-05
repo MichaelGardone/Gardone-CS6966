@@ -85,9 +85,9 @@ class TCAVPipeline(explainer.BaseExplainer):
     # Generate a concept's TOKENS
     def get_tensor_from_filename(self, filename):
         ds = torchtext.data.TabularDataset(path=filename,
-                                        fields=[('text', torchtext.data.Field()),
-                                                ('label', torchtext.data.Field())],
-                                        format='csv')
+                                           fields=[('text', torchtext.data.Field()),
+                                               ('label', torchtext.data.Field())],
+                                           format='csv')
         const_len = 7
         for concept in ds:
             concept.text = concept.text[:const_len]
