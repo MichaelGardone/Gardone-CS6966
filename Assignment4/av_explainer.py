@@ -28,10 +28,10 @@ class AttentionVisualizerExplainer():
         return pred[position]
     ##
 
-    def forward_func2(self, inputs:tensor):
+    def forward_func2(self, inputs:tensor, token_type_ids=None, position_ids=None):
         # Local variable to store the attention mask to be used in explain -- ih-explainer (from class) just tosses this data out
         self.__attention_mask = torch.ones_like(inputs)
-        pred = self.__pipeline.model(inputs, attention_mask=self.__attention_mask)
+        pred = self.__pipeline.model(inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=self.__attention_mask)
         return pred.start_logits, pred.end_logits, pred.attentions
     ##
     
@@ -41,21 +41,51 @@ class AttentionVisualizerExplainer():
                       
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
-        prediction = self.__pipeline.predict(text)
-        inputs = self.generate_inputs(text)
+        inputs, input_len = self.generate_inputs2(text)
         baseline = self.generate_baseline(sequence_len = inputs.shape[1])
+        token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
+        position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
 
-        ss, es, att = self.forward_func2(inputs)
-        print(ss)
-        print("#=#=#=#=#=#=#=#=#=#=#=#")
-        print(es)
+        indices = inputs[0].detach().tolist()
+        all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
+
+        ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
+        print('Predicted Answer: ', ' '.join(all_tokens[torch.argmax(ss) : torch.argmax(es)+1]))
         print("#=#=#=#=#=#=#=#=#=#=#=#")
         print(att)
 
         # This works!
+        # prediction = self.__pipeline.predict(text)
+        # inputs = self.generate_inputs(text)
+        # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
         # lig = LayerIntegratedGradients(self.forward_func2, getattr(self.__pipeline.model, 'deberta').embeddings)
     ##
     
+    def generate_inputs2(self, text: str):
+        """
+            Convenience method for generation of input ids as list of torch tensors
+        """
+        encode_text = self.__pipeline.tokenizer.encode(text, add_special_tokens=False)
+        return torch.tensor(encode_text, device = self.__device).unsqueeze(0), len(encode_text)
+    ##
+
+    def construct_input_ref_token_type_pair(self, input_ids, sep_ind=0):
+        seq_len = input_ids.size(1)
+        token_type_ids = torch.tensor([[0 if i <= sep_ind else 1 for i in range(seq_len)]], device=self.__device)
+        ref_token_type_ids = torch.zeros_like(token_type_ids, device=self.__device)# * -1
+        return token_type_ids, ref_token_type_ids
+    ##
+
+    def construct_input_ref_pos_id_pair(self, input_ids):
+        seq_length = input_ids.size(1)
+        position_ids = torch.arange(seq_length, dtype=torch.long, device=self.__device)
+        # we could potentially also use random permutation with `torch.randperm(seq_length, device=device)`
+        ref_position_ids = torch.zeros(seq_length, dtype=torch.long, device=self.__device)
+
+        position_ids = position_ids.unsqueeze(0).expand_as(input_ids)
+        ref_position_ids = ref_position_ids.unsqueeze(0).expand_as(input_ids)
+        return position_ids, ref_position_ids
+
     def generate_inputs(self, text: str) -> tensor:
         """
             Convenience method for generation of input ids as list of torch tensors
