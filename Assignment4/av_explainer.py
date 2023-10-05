@@ -119,7 +119,7 @@ class AttentionVisualizerExplainer():
             self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=outfile_path)
         ##
 
-        self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().deatch().cpu.numpy(), x_label="Layer")
+        self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu.numpy(), x_label="Layer")
 
         # interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, 'deberta.embeddings.word_embeddings')
         
