@@ -27,7 +27,7 @@ class TCAVPipeline(explainer.BaseExplainer):
         self.__name = name
         self.__pipeline = pipeline
         self.__device = device
-        
+
         self.__tcav = TCAV(pipeline, layers=['convs.2', 'convs.1'])
     ##
     
@@ -61,7 +61,17 @@ class TCAVPipeline(explainer.BaseExplainer):
         """
             Convenience method for generation of input ids as list of torch tensors
         """
-        return self.__pipeline.tokenizer.decode(inpt).unsqueeze(0)
+        rebuilt = ""
+        
+        for i in range(len(inpt)):
+            if i + 1 < len(inpt):
+                rebuilt += self.__pipeline.tokenizer.decode(inpt).unsqueeze(0) + " "
+            else:
+                rebuilt += self.__pipeline.tokenizer.decode(inpt).unsqueeze(0)
+            ##
+        ##
+
+        return rebuilt
     ##
     
     def generate_baseline(self, sequence_len: int) -> tensor:
