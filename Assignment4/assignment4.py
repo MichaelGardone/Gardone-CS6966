@@ -38,7 +38,7 @@ def main(args):
     tf = exp_model.generate_inputs("hello world!")
     print(exp_model.decode(tf))
     
-    positive = exp_model.assemble_concept("positive", 0, "data/positive")
+    positive = exp_model.assemble_concept("positive", 0, "data/positive.csv")
     exp_model.print_concept(iter(positive.data_iter))
 
     return
