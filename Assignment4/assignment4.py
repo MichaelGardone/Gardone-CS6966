@@ -38,6 +38,7 @@ def main(args):
         for obj in reader:
             exp_model.explain(obj["review"], os.path.join(args.output_dir, f'/example_{idx}/'))
             idx+=1
+            break # for now
         ##
     ##
 ##

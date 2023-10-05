@@ -56,7 +56,8 @@ class AttentionVisualizerExplainer():
             fig.colorbar(im, fraction=0.046, pad=0.04)
         ##
         plt.tight_layout()
-        plt.show()
+
+        plt.savefig(output_dir + "token2token")
     ##
                       
     def explain(self, text: str, outfile_path: str):
