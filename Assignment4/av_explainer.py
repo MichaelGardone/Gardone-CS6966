@@ -7,6 +7,7 @@ from captum.attr import visualization as viz
 from captum.attr import IntegratedGradients, LayerConductance, LayerIntegratedGradients, LayerActivation
 from captum.attr import configure_interpretable_embedding_layer, remove_interpretable_embedding_layer
 
+import os
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -66,7 +67,7 @@ class AttentionVisualizerExplainer():
         ##
         plt.tight_layout()
 
-        plt.savefig(output_dir + f"token2token_layer{layer}")
+        plt.savefig(os.path.join(output_dir, f"token2token_layer{layer}"))
     ##
 
     def _visualize_t2h_scores(self, scores_mat, all_tokens, output_dir="out"):
@@ -91,7 +92,7 @@ class AttentionVisualizerExplainer():
         ##
 
         plt.tight_layout()
-        plt.savefig(output_dir + "token2head")
+        plt.savefig(os.path.join(output_dir, "token2head"))
     ##
     
     def explain(self, text: str, outfile_path: str):
