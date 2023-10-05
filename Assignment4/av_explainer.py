@@ -41,24 +41,34 @@ class AttentionVisualizerExplainer():
                       
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
-        inputs, input_len = self.generate_inputs2(text)
-        baseline = self.generate_baseline(sequence_len = inputs.shape[1])
-        token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
-        position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
-
-        indices = inputs[0].detach().tolist()
-        all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
-
-        ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
-        print('Predicted Answer: ', ' '.join(all_tokens[torch.argmax(ss) : torch.argmax(es)+1]))
-        print("#=#=#=#=#=#=#=#=#=#=#=#")
-        print(att)
-
-        # This works!
-        # prediction = self.__pipeline.predict(text)
-        # inputs = self.generate_inputs(text)
+        # inputs, input_len = self.generate_inputs2(text)
         # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
-        # lig = LayerIntegratedGradients(self.forward_func2, getattr(self.__pipeline.model, 'deberta').embeddings)
+        # token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
+        # position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
+
+        # indices = inputs[0].detach().tolist()
+        # all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
+
+        # ss, es, att = self.forward_func2(inputs, token_type_ids=token_type_ids,position_ids=position_ids)
+        # print('Predicted Answer: ', ' '.join(all_tokens[torch.argmax(ss) : torch.argmax(es)+1]))
+        # print("#=#=#=#=#=#=#=#=#=#=#=#")
+        # print(att)
+
+        # I am forgor::: the above is primarily from the QA model, sentiment analysis doesn't provide the start/end logits
+
+        prediction = self.__pipeline.predict(text)
+        inputs = self.generate_inputs(text)
+        baseline = self.generate_baseline(sequence_len = inputs.shape[1])
+
+        lig = LayerIntegratedGradients(self.forward_func, getattr(self.__pipeline.model, 'deberta').embeddings)
+        attributes, delta = lig.attribute(inputs=inputs,
+                                  baselines=baseline,
+                                  target = self.__pipeline.model.config.label2id[prediction[0]['label']], 
+                                  return_convergence_delta = True)
+        print(attributes)
+        attributes_all = torch.stack(attributes)
+        print("#=#=#=#=#=#=#=#=#=#=#=#")
+        print(attributes_all)
     ##
     
     def generate_inputs2(self, text: str):
