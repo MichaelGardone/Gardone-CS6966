@@ -1,4 +1,4 @@
-from tcav_explainer import TCAVPipeline
+from av_explainer import AttentionVisualizerExplainer
 
 import torch
 
@@ -15,8 +15,6 @@ import os
 
 PRETRAINED_MODEL = 'microsoft/deberta-v3-base'
 
-# TEXT = torchtext.data.Field(lower=True, tokenize='spacy')
-# LABEL = torchtext.data.LabelField(dtype = torch.float)
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main(args):
@@ -33,16 +31,8 @@ def main(args):
                                 device=DEVICE
                                 )
     
-    exp_model = TCAVPipeline(PRETRAINED_MODEL, clf, DEVICE)
+    exp_model = AttentionVisualizerExplainer(PRETRAINED_MODEL, clf, DEVICE)
     
-    tf = exp_model.generate_inputs("hello world!")
-    print(exp_model.decode(tf))
-    
-    positive = exp_model.assemble_concept("positive", 0, "data/positive.csv")
-    exp_model.print_concept(iter(positive.data_iter))
-
-    return
-
     idx=0
     with jsonlines.open(args.a1_analysis_file, 'r') as reader:
         for obj in reader:

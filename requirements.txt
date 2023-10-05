@@ -9,4 +9,4 @@ accelerate
 jsonlines
 pillow
 captum
-spacy
+seaborn
