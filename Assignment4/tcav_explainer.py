@@ -6,6 +6,7 @@ import numpy as np
 
 import torch
 from torch import tensor
+from torchtext.legacy import data
 import torchtext
 
 import transformers
@@ -83,7 +84,7 @@ class TCAVPipeline(explainer.BaseExplainer):
 
     # Generate a concept's TOKENS
     def get_tensor_from_filename(self, filename):
-        ds = torchtext.data.TabularDataset(path=filename,
+        ds = data.TabularDataset(path=filename,
                                         fields=[('text', torchtext.data.Field()),
                                                 ('label', torchtext.data.Field())],
                                         format='csv')
