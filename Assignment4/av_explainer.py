@@ -94,7 +94,7 @@ class AttentionVisualizerExplainer():
         all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
 
         # print(attributes)
-        self._visualize_t2t_scores(attributes[2].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
+        self._visualize_t2t_scores(attributes[0].squeeze().detach().cpu().numpy(), all_tokens, output_dir=outfile_path)
     ##
     
     def generate_inputs2(self, text: str):
