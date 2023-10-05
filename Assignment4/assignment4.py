@@ -17,8 +17,8 @@ import os
 
 PRETRAINED_MODEL = 'microsoft/deberta-v3-base'
 
-TEXT = torchtext.data.Field(lower=True, tokenize='spacy')
-LABEL = torchtext.data.LabelField(dtype = torch.float)
+# TEXT = torchtext.data.Field(lower=True, tokenize='spacy')
+# LABEL = torchtext.data.LabelField(dtype = torch.float)
 DEVICE = torch.DEVICE('cuda' if torch.cuda.is_available() else 'cpu')
 
 # ========= CONCEPT MAKER =========== #
@@ -40,7 +40,6 @@ def main(args):
     random.seed(args.seed)
     np.random.seed(args.seed)
 
-
     tokenizer = AutoTokenizer.from_pretrained(PRETRAINED_MODEL) 
     model = AutoModelForSequenceClassification.from_pretrained(PRETRAINED_MODEL, num_labels=args.num_labels, output_attentions=True)
     
@@ -51,8 +50,14 @@ def main(args):
                                 )
     
     exp_model = TCAVPipeline(PRETRAINED_MODEL, clf, DEVICE)
+    
+    tf = exp_model.generate_inputs("hello world!")
+    print(exp_model.decode(tf))
+    
     positive = exp_model.assemble_concept("positive", 0, "data/positive")
     print_concept(iter(positive.data_iter))
+
+
     return
 
     idx=0

@@ -52,6 +52,13 @@ class TCAVPipeline(explainer.BaseExplainer):
         """
         return torch.tensor(self.__pipeline.tokenizer.encode(text, add_special_tokens=False), device = self.__device).unsqueeze(0)
     ##
+
+    def decode(self, inpt: tensor) -> str:
+        """
+            Convenience method for generation of input ids as list of torch tensors
+        """
+        return self.__pipeline.tokenizer.decode(inpt).unsqueeze(0)
+    ##
     
     def generate_baseline(self, sequence_len: int) -> tensor:
         """
@@ -70,7 +77,7 @@ class TCAVPipeline(explainer.BaseExplainer):
         for concept in ds:
             concept.text = concept.text[:const_len]
             concept.text += ['pad'] * max(0, const_len - len(concept.text))
-            text_indices = torch.tensor([TEXT.vocab.stoi[t] for t in concept.text], device=self.__device)
+            text_indices = torch.tensor([self.generate_inputs(t) for t in concept.text], device=self.__device)
             yield text_indices
         ##
     ##
