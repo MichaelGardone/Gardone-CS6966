@@ -149,7 +149,7 @@ class AttentionVisualizerExplainer():
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
-        # print(getattr(self.__pipeline.model, 'deberta'))
+        print(getattr(self.__pipeline.model, 'deberta'))
         # print(getattr(self.__pipeline.model, 'deberta').embeddings)
 
         # Forgot that the PIPELINE is just a way to look at DeBERTa, I need the REAL model...
