@@ -95,14 +95,19 @@ class AttentionVisualizerExplainer():
         plt.savefig(os.path.join(output_dir, "token2head"))
     ##
 
-    def _visualize_as_heatmap(self, all_tokens, layer_attrs_start, output_dir="out"):
+    def _visualize_as_heatmap(self, all_tokens, layer_attrs, output_dir="out", name_postpending=""):
         fig, ax = plt.subplots(figsize=(15,5))
         xticklabels = all_tokens
         yticklabels = list(range(1,13))
-        ax = sns.heatmap(layer_attrs_start.cpu().detach().numpy(), xticklabels=xticklabels, yticklabels=yticklabels, linewidth=0.2)
+        ax = sns.heatmap(layer_attrs.cpu().detach().numpy(), xticklabels=xticklabels, yticklabels=yticklabels, linewidth=0.2)
         plt.xlabel('Tokens')
         plt.ylabel('Layers')
-        plt.savefig(os.path.join(output_dir, "heatmap"))
+
+        if len(name_postpending) > 0:
+            plt.savefig(os.path.join(output_dir, "heatmap", name_postpending))
+        else:
+            plt.savefig(os.path.join(output_dir, "heatmap"))
+        ##
     ##
     
     def explain(self, text: str, outfile_path: str):
@@ -126,15 +131,16 @@ class AttentionVisualizerExplainer():
 
         # DeBERTa has 12 layers: [0, 11]
         for i in range(11):
-            self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=outfile_path)
+            self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=os.path.join(outfile_path, "t2t"))
         ##
 
         # scores_mat, all_tokens, layer,
-        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL", x_label_name="Layer")
+        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "t2t"))
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
-        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, "tokenizer")
+        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, "deberta.embeddings")
         
         layer_attrs_start = []
         layer_attrs_end = []
@@ -172,7 +178,20 @@ class AttentionVisualizerExplainer():
         # layer x batch x head x seq_len x seq_len
         layer_attn_mat_end = torch.stack(layer_attn_mat_end)
 
+        self._visualize_as_heatmap(all_attens, layer_attrs_start, output_dir=os.path.join(outfile_path, "heatmap"))
+        self._visualize_as_heatmap(all_attens, layer_attrs_end, output_dir=os.path.join(outfile_path, "heatmap"))
 
+        # DeBERTa has 12 layers: [0, 11]
+        for i in range(11):
+            self._visualize_t2t_scores(layer_attn_mat_start[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=os.path.join(outfile_path, "atten_matrix_ST"))
+            self._visualize_t2t_scores(layer_attn_mat_end[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=os.path.join(outfile_path, "atten_matrix_EN"))
+        ##
+
+        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_start, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_ST"))
+        
+        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_end, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_EN"))
 
         # prediction = self.__pipeline.predict(text)
         # inputs = self.generate_inputs(text)
