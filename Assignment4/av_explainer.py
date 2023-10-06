@@ -94,6 +94,16 @@ class AttentionVisualizerExplainer():
         plt.tight_layout()
         plt.savefig(os.path.join(output_dir, "token2head"))
     ##
+
+    def _visualize_as_heatmap(self, all_tokens, layer_attrs_start, output_dir="out"):
+        fig, ax = plt.subplots(figsize=(15,5))
+        xticklabels = all_tokens
+        yticklabels = list(range(1,13))
+        ax = sns.heatmap(layer_attrs_start.cpu().detach().numpy(), xticklabels=xticklabels, yticklabels=yticklabels, linewidth=0.2)
+        plt.xlabel('Tokens')
+        plt.ylabel('Layers')
+        plt.savefig(os.path.join(output_dir, "heatmap"))
+    ##
     
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
@@ -119,7 +129,8 @@ class AttentionVisualizerExplainer():
             self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=outfile_path)
         ##
 
-        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), x_label_name="Layer")
+        # scores_mat, all_tokens, layer,
+        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL" x_label_name="Layer")
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
