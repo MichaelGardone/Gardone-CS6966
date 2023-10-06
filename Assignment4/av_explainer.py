@@ -121,8 +121,32 @@ class AttentionVisualizerExplainer():
 
         self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu.numpy(), x_label="Layer")
 
-        # interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, 'deberta.embeddings.word_embeddings')
+        print("finished first attempt at visualizing things, currently attempting to look at every layer")
+
+        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline)
         
+        layer_attrs_start = []
+        layer_attrs_end = []
+
+        layer_attn_mat_start = []
+        layer_attn_mat_end = []
+
+        input_embeddings, ref_input_embeddings = self.construct_whole_embeddings(inputs, baseline, \
+                                                token_type_ids=token_type_ids, ref_token_type_ids=ref_token_type_ids, \
+                                                position_ids=position_ids, ref_position_ids=ref_position_ids)
+        
+        for i in range(self.__pipeline.model.config.num_hidden_layers):
+            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.encoder.layer[i])
+            layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
+            layer_attributions_end = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 1))
+            
+            layer_attrs_start.append(self.summarize_attributions(layer_attributions_start[0]))
+            layer_attrs_end.append(self.summarize_attributions(layer_attributions_end[0]))
+
+            layer_attn_mat_start.append(layer_attributions_start[1])
+            layer_attn_mat_end.append(layer_attributions_end[1])
+        ##
+
         # prediction = self.__pipeline.predict(text)
         # inputs = self.generate_inputs(text)
         # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
@@ -173,6 +197,14 @@ class AttentionVisualizerExplainer():
         position_ids = position_ids.unsqueeze(0).expand_as(input_ids)
         ref_position_ids = ref_position_ids.unsqueeze(0).expand_as(input_ids)
         return position_ids, ref_position_ids
+    ##
+
+    def construct_whole_embeddings(self, input_ids, ref_input_ids, token_type_ids=None, ref_token_type_ids=None, position_ids=None, ref_position_ids=None):
+        input_embeddings = self.__interpretable_embedding.indices_to_embeddings(input_ids)
+        ref_input_embeddings = self.__interpretable_embedding.indices_to_embeddings(ref_input_ids)
+        
+        return input_embeddings, ref_input_embeddings
+    ##
 
     def generate_inputs(self, text: str) -> tensor:
         """
