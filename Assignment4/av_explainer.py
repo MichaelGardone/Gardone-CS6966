@@ -134,7 +134,7 @@ class AttentionVisualizerExplainer():
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
-        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, "word_embeddings")
+        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, "tokenizer")
         
         layer_attrs_start = []
         layer_attrs_end = []
