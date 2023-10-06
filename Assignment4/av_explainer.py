@@ -170,7 +170,7 @@ class AttentionVisualizerExplainer():
         print("accumulating information from the layers")
 
         for i in range(self.__pipeline.model.config.num_hidden_layers):
-            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.deberta.encoder.layer[i])
+            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.encoder.layer[i])
             layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
             layer_attributions_end = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 1))
             
