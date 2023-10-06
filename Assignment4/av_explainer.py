@@ -130,7 +130,7 @@ class AttentionVisualizerExplainer():
         ##
 
         # scores_mat, all_tokens, layer,
-        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL" x_label_name="Layer")
+        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL", x_label_name="Layer")
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
