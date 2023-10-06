@@ -119,7 +119,7 @@ class AttentionVisualizerExplainer():
             self._visualize_t2t_scores(all_attens[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=outfile_path)
         ##
 
-        self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu.numpy(), x_label="Layer")
+        self._visualize_t2h_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), x_label="Layer")
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
@@ -135,6 +135,8 @@ class AttentionVisualizerExplainer():
                                                 token_type_ids=token_type_ids, ref_token_type_ids=ref_token_type_ids, \
                                                 position_ids=position_ids, ref_position_ids=ref_position_ids)
         
+        print("accumulating information from the layers")
+
         for i in range(self.__pipeline.model.config.num_hidden_layers):
             lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.encoder.layer[i])
             layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
@@ -147,6 +149,20 @@ class AttentionVisualizerExplainer():
             layer_attn_mat_end.append(layer_attributions_end[1])
         ##
 
+        print("finished checking all the layers")
+
+        # layer x seq_len
+        layer_attrs_start = torch.stack(layer_attrs_start)
+        # layer x seq_len
+        layer_attrs_end = torch.stack(layer_attrs_end)
+
+        # layer x batch x head x seq_len x seq_len
+        layer_attn_mat_start = torch.stack(layer_attn_mat_start)
+        # layer x batch x head x seq_len x seq_len
+        layer_attn_mat_end = torch.stack(layer_attn_mat_end)
+
+
+
         # prediction = self.__pipeline.predict(text)
         # inputs = self.generate_inputs(text)
         # baseline = self.generate_baseline(sequence_len = inputs.shape[1])
@@ -158,7 +174,6 @@ class AttentionVisualizerExplainer():
         #                           return_convergence_delta = True)
         #                         #   attribute_to_layer_input = True)
         # # We care about inputs in this case, so we want to look at all input attributions rather than output
-        
         
         # indices = inputs[0].detach().tolist()
         # all_tokens = self.__pipeline.tokenizer.convert_ids_to_tokens(indices)
