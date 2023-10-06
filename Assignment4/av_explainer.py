@@ -46,7 +46,7 @@ class AttentionVisualizerExplainer():
         return output.logits, output.attentions
     ##
     
-    def _visualize_t2t_scores(self, scores_mat, all_tokens, layer, x_label_name='Head', output_dir="out"):
+    def _visualize_t2t_scores(self, scores_mat, all_tokens, layer, x_label_name='Head', output_dir="out", name_postpending=""):
         fig = plt.figure(figsize=(20, 20))
         for idx, scores in enumerate(scores_mat):
             scores_np = np.array(scores)
@@ -67,7 +67,10 @@ class AttentionVisualizerExplainer():
         ##
         plt.tight_layout()
 
-        plt.savefig(os.path.join(output_dir, f"token2token_layer{layer}"))
+        if len(name_postpending) > 0:
+            plt.savefig(os.path.join(output_dir, f"token2token_layer", name_postpending))
+        else:
+            plt.savefig(os.path.join(output_dir, f"token2token_layer{layer}"))
     ##
 
     def _visualize_t2h_scores(self, scores_mat, all_tokens, output_dir="out"):
@@ -135,8 +138,8 @@ class AttentionVisualizerExplainer():
         ##
 
         # scores_mat, all_tokens, layer,
-        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
-                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "t2t"))
+        self._visualize_t2t_scores(self.__norm_fn(all_attens, dim=2).squeeze().detach().cpu().numpy(), all_tokens, -1,\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "t2t"), name_postpending="ALL")
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
@@ -187,11 +190,11 @@ class AttentionVisualizerExplainer():
             self._visualize_t2t_scores(layer_attn_mat_end[i].squeeze().detach().cpu().numpy(), all_tokens, i, output_dir=os.path.join(outfile_path, "atten_matrix_EN"))
         ##
 
-        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_start, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
-                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_ST"))
+        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_start, dim=2).squeeze().detach().cpu().numpy(), all_tokens, -1,\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_ST"), name_postpending="ALL")
         
-        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_end, dim=2).squeeze().detach().cpu().numpy(), all_tokens, "-ALL",\
-                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_EN"))
+        self._visualize_t2t_scores(self.__norm_fn(layer_attn_mat_end, dim=2).squeeze().detach().cpu().numpy(), all_tokens,\
+                                   x_label_name="Layer", output_dir=os.path.join(outfile_path, "atten_matrix_EN"), name_postpending="ALL")
 
         # prediction = self.__pipeline.predict(text)
         # inputs = self.generate_inputs(text)
