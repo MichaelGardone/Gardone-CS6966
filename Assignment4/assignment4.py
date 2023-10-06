@@ -33,6 +33,8 @@ def main(args):
     
     exp_model = AttentionVisualizerExplainer(PRETRAINED_MODEL, clf, DEVICE)
 
+    # print(getattr(clf.model, 'deberta').encoder)
+    
     idx=0
     with jsonlines.open(args.a1_analysis_file, 'r') as reader:
         for obj in reader:

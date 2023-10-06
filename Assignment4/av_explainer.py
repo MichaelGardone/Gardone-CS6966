@@ -18,6 +18,7 @@ class AttentionVisualizerExplainer():
         self.__name = name
         self.__pipeline = pipeline
         self.__device = device
+        self.__encoder = getattr(pipeline.model, 'deberta').encoder
 
         if torch.__version__ >= '1.7.0':
             self.__norm_fn = torch.linalg.norm
@@ -149,7 +150,7 @@ class AttentionVisualizerExplainer():
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
-        print(getattr(self.__pipeline.model, 'deberta'))
+        # print(getattr(self.__pipeline.model, 'deberta'))
         # print(getattr(self.__pipeline.model, 'deberta').embeddings)
 
         # Forgot that the PIPELINE is just a way to look at DeBERTa, I need the REAL model...
@@ -170,7 +171,7 @@ class AttentionVisualizerExplainer():
         print("accumulating information from the layers")
 
         for i in range(self.__pipeline.model.config.num_hidden_layers):
-            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.encoder.layer[i])
+            lc = LayerConductance(self._squad_pos_forward_func, self.__encoder.layer[i])
             layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
             layer_attributions_end = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 1))
             
