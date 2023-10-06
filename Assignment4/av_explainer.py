@@ -178,8 +178,8 @@ class AttentionVisualizerExplainer():
         # layer x batch x head x seq_len x seq_len
         layer_attn_mat_end = torch.stack(layer_attn_mat_end)
 
-        self._visualize_as_heatmap(all_attens, layer_attrs_start, output_dir=os.path.join(outfile_path, "heatmap"))
-        self._visualize_as_heatmap(all_attens, layer_attrs_end, output_dir=os.path.join(outfile_path, "heatmap"))
+        self._visualize_as_heatmap(all_attens, layer_attrs_start, output_dir=os.path.join(outfile_path, "heatmap", name_postpending="_START"))
+        self._visualize_as_heatmap(all_attens, layer_attrs_end, output_dir=os.path.join(outfile_path, "heatmap") name_postpending="_END")
 
         # DeBERTa has 12 layers: [0, 11]
         for i in range(11):
