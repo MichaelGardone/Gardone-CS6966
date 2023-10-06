@@ -30,9 +30,6 @@ class AttentionVisualizerExplainer():
         """
             The standard forward function that just returns a prediction based on the position in the inputs.
         """
-        # Local variable to store the attention mask to be used in explain -- ih-explainer (from class) just tosses this data out
-        self.__attention_mask = torch.ones_like(inputs)
-
         pred = self.__pipeline.model(inputs, attention_mask=self.__attention_mask)
 
         return pred[position]
@@ -40,11 +37,19 @@ class AttentionVisualizerExplainer():
 
     def forward_func2(self, inputs:tensor, token_type_ids=None, position_ids=None):
         # Local variable to store the attention mask to be used in explain -- ih-explainer (from class) just tosses this data out
-        self.__attention_mask = torch.ones_like(inputs)
         output = self.__pipeline.model(inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=self.__attention_mask)
         # print(output)
         return output.logits, output.attentions
     ##
+
+    def _squad_pos_forward_func(self, inputs:tensor, token_type_ids=None, position_ids=None, attention_mask=None, position=0):
+        print(inputs)
+        print(token_type_ids)
+        print(position_ids)
+        print(attention_mask)
+        pred = self.__pipeline.model(inputs_embeds=inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=attention_mask)
+        pred = pred[position]
+        return pred.max(1).values
     
     def _visualize_t2t_scores(self, scores_mat, all_tokens, layer, x_label_name='Head', output_dir="out", name_postpending=""):
         fig = plt.figure(figsize=(20, 20))
@@ -68,7 +73,7 @@ class AttentionVisualizerExplainer():
         plt.tight_layout()
 
         if len(name_postpending) > 0:
-            plt.savefig(os.path.join(output_dir, f"token2token_layer", name_postpending))
+            plt.savefig(os.path.join(output_dir, f"token2token_layer") + name_postpending)
         else:
             plt.savefig(os.path.join(output_dir, f"token2token_layer{layer}"))
     ##
@@ -107,7 +112,7 @@ class AttentionVisualizerExplainer():
         plt.ylabel('Layers')
 
         if len(name_postpending) > 0:
-            plt.savefig(os.path.join(output_dir, "heatmap", name_postpending))
+            plt.savefig(os.path.join(output_dir, "heatmap") + name_postpending)
         else:
             plt.savefig(os.path.join(output_dir, "heatmap"))
         ##
@@ -116,6 +121,7 @@ class AttentionVisualizerExplainer():
     def explain(self, text: str, outfile_path: str):
         # Generate all the baseline information from before
         inputs, input_len = self.generate_inputs2(text)
+        self.__attention_mask = torch.ones_like(inputs)
         baseline = self.generate_baseline(sequence_len = inputs.shape[1])
         token_type_ids, ref_token_type_ids = self.construct_input_ref_token_type_pair(inputs, input_len)
         position_ids, ref_position_ids = self.construct_input_ref_pos_id_pair(inputs)
@@ -143,7 +149,13 @@ class AttentionVisualizerExplainer():
 
         print("finished first attempt at visualizing things, currently attempting to look at every layer")
 
-        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline, "deberta.embeddings")
+        # print(getattr(self.__pipeline.model, 'deberta'))
+        # print(getattr(self.__pipeline.model, 'deberta').embeddings)
+
+        # Forgot that the PIPELINE is just a way to look at DeBERTa, I need the REAL model...
+        self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline.model, "deberta.embeddings")
+
+        print("generated interpretable embedding")
         
         layer_attrs_start = []
         layer_attrs_end = []
@@ -158,7 +170,7 @@ class AttentionVisualizerExplainer():
         print("accumulating information from the layers")
 
         for i in range(self.__pipeline.model.config.num_hidden_layers):
-            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.encoder.layer[i])
+            lc = LayerConductance(self._squad_pos_forward_func, self.__pipeline.model.deberta.encoder.layer[i])
             layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
             layer_attributions_end = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 1))
             
@@ -182,7 +194,7 @@ class AttentionVisualizerExplainer():
         layer_attn_mat_end = torch.stack(layer_attn_mat_end)
 
         self._visualize_as_heatmap(all_attens, layer_attrs_start, output_dir=os.path.join(outfile_path, "heatmap", name_postpending="_START"))
-        self._visualize_as_heatmap(all_attens, layer_attrs_end, output_dir=os.path.join(outfile_path, "heatmap") name_postpending="_END")
+        self._visualize_as_heatmap(all_attens, layer_attrs_end, output_dir=os.path.join(outfile_path, "heatmap"), name_postpending="_END")
 
         # DeBERTa has 12 layers: [0, 11]
         for i in range(11):
