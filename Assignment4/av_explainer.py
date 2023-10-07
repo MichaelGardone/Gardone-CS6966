@@ -44,13 +44,10 @@ class AttentionVisualizerExplainer():
     ##
 
     def _squad_pos_forward_func(self, inputs:tensor, token_type_ids=None, position_ids=None, attention_mask=None, position=0):
-        print(inputs)
-        print(token_type_ids)
-        print(position_ids)
-        print(attention_mask)
         pred = self.__pipeline.model(inputs_embeds=inputs, token_type_ids=token_type_ids, position_ids=position_ids, attention_mask=attention_mask)
         pred = pred[position]
         return pred.max(1).values
+    ##
     
     def _visualize_t2t_scores(self, scores_mat, all_tokens, layer, x_label_name='Head', output_dir="out", name_postpending=""):
         fig = plt.figure(figsize=(20, 20))
@@ -239,7 +236,7 @@ class AttentionVisualizerExplainer():
             Convenience method for generation of input ids as list of torch tensors
         """
         encode_text = self.__pipeline.tokenizer.encode(text, add_special_tokens=False)
-        return torch.tensor(encode_text, device = self.__device).unsqueeze(0), len(encode_text)
+        return torch.tensor(encode_text, device = self.__device), len(encode_text)
     ##
 
     def construct_input_ref_token_type_pair(self, input_ids, sep_ind=0):
