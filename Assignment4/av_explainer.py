@@ -161,6 +161,7 @@ class AttentionVisualizerExplainer():
         layer_attn_mat_start = []
         layer_attn_mat_end = []
 
+        return
         input_embeddings, ref_input_embeddings = self.construct_whole_embeddings(inputs, baseline, \
                                                 token_type_ids=token_type_ids, ref_token_type_ids=ref_token_type_ids, \
                                                 position_ids=position_ids, ref_position_ids=ref_position_ids)
@@ -169,6 +170,8 @@ class AttentionVisualizerExplainer():
 
         for i in range(self.__pipeline.model.config.num_hidden_layers):
             lc = LayerConductance(self._squad_pos_forward_func, self.__encoder.layer[i])
+            # >>>> Fails here: fails deep in when trying to access modeling_deberta_v2, likely a problem with the way the model is being created?
+            #                   It's the hidden_sizes feature that appears to not be properly populated, which I have no clue on how to really diagnose
             layer_attributions_start = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 0))
             layer_attributions_end = lc.attribute(inputs=input_embeddings, baselines=ref_input_embeddings, additional_forward_args=(token_type_ids, position_ids, self.__attention_mask, 1))
             
@@ -236,7 +239,7 @@ class AttentionVisualizerExplainer():
             Convenience method for generation of input ids as list of torch tensors
         """
         encode_text = self.__pipeline.tokenizer.encode(text, add_special_tokens=False)
-        return torch.tensor(encode_text, device = self.__device), len(encode_text)
+        return torch.tensor(encode_text, device = self.__device).unsqueeze(0), len(encode_text)
     ##
 
     def construct_input_ref_token_type_pair(self, input_ids, sep_ind=0):
