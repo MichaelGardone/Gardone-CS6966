@@ -149,6 +149,7 @@ class AttentionVisualizerExplainer():
 
         # print(getattr(self.__pipeline.model, 'deberta'))
         # print(getattr(self.__pipeline.model, 'deberta').embeddings)
+        return # break point to prevent bad code from getting through
 
         # Forgot that the PIPELINE is just a way to look at DeBERTa, I need the REAL model...
         self.__interpretable_embedding = configure_interpretable_embedding_layer(self.__pipeline.model, "deberta.embeddings")
@@ -161,7 +162,6 @@ class AttentionVisualizerExplainer():
         layer_attn_mat_start = []
         layer_attn_mat_end = []
 
-        return
         input_embeddings, ref_input_embeddings = self.construct_whole_embeddings(inputs, baseline, \
                                                 token_type_ids=token_type_ids, ref_token_type_ids=ref_token_type_ids, \
                                                 position_ids=position_ids, ref_position_ids=ref_position_ids)
@@ -234,7 +234,7 @@ class AttentionVisualizerExplainer():
         return attributions
     ##
     
-    def generate_inputs2(self, text: str):
+    def generate_inputs2(self, text: str) -> (tensor, int):
         """
             Convenience method for generation of input ids as list of torch tensors
         """
